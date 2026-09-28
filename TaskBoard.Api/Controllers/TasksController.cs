@@ -19,7 +19,9 @@ public class TasksController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<TaskItem>>> GetTasks()
     {
-        return await _context.Tasks.ToListAsync();
+        return await _context.Tasks
+            .OrderByDescending(t => t.CreatedAt)
+            .ToListAsync();
     }
 
     [HttpGet("{id}")]
@@ -42,6 +44,8 @@ public class TasksController : ControllerBase
     public async Task<IActionResult> UpdateTask(int id, TaskItem task)
     {
         if (id != task.Id) return BadRequest();
+        if (!await _context.Tasks.AnyAsync(t => t.Id == id)) return NotFound();
+
         _context.Entry(task).State = EntityState.Modified;
         await _context.SaveChangesAsync();
         return NoContent();

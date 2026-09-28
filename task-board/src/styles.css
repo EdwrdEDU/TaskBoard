@@ -1,1 +1,20 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+	font-family: "DM Sans", "Segoe UI", sans-serif;
+	color: #1d2a27;
+	background: #f5f6f0;
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+}
+
+* { box-sizing: border-box; }
+
+body {
+	min-width: 320px;
+	margin: 0;
+	background:
+		radial-gradient(circle at 8% 4%, rgba(244, 150, 116, .18), transparent 25rem),
+		radial-gradient(circle at 92% 18%, rgba(126, 193, 157, .15), transparent 28rem),
+		#f5f6f0;
+}
+
+button, input, select { font: inherit; }

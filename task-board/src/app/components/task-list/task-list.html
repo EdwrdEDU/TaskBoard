@@ -1,13 +1,86 @@
-<div>
-  <h2>My Tasks</h2>
+<div class="app">
+  <section class="intro" aria-labelledby="board-title">
+    <div>
+      <p class="eyebrow accent">Your day, in motion</p>
+      <h2 id="board-title">Make progress visible.</h2>
+      <p class="intro-copy">Capture the next thing, give it a home, and keep your momentum moving.</p>
+    </div>
+    <div class="stats" aria-label="Task summary">
+      <div class="stat"><strong>{{ tasksFor('ToDo').length }}</strong><span>To do</span></div>
+      <div class="stat"><strong>{{ tasksFor('InProgress').length }}</strong><span>In motion</span></div>
+      <div class="stat"><strong>{{ tasksFor('Done').length }}</strong><span>Complete</span></div>
+    </div>
+  </section>
 
-  <input [(ngModel)]="newTitle" placeholder="New task title" />
-  <button (click)="addTask()">Add</button>
+  @if (error) {
+    <div class="error">{{ error }}</div>
+  }
 
-  <ul>
-    <li *ngFor="let task of tasks">
-      {{ task.title }} — {{ task.status }}
-      <button (click)="deleteTask(task.id!)">Delete</button>
-    </li>
-  </ul>
+  <section class="capture-panel" aria-label="Add a task">
+    <div class="capture-heading">
+      <span class="plus-icon" aria-hidden="true">+</span>
+      <div><strong>New task</strong><span>Start with the next useful step.</span></div>
+    </div>
+    <div class="form">
+      <label class="sr-only" for="task-title">Task title</label>
+      <input id="task-title" [(ngModel)]="title" placeholder="What needs doing?" maxlength="100" />
+      <label class="sr-only" for="task-description">Description</label>
+      <input id="task-description" [(ngModel)]="description" placeholder="Add a little context (optional)" maxlength="500" />
+      <label class="sr-only" for="task-priority">Priority</label>
+      <select id="task-priority" [(ngModel)]="priority">
+      <option value="Low">Low</option>
+      <option value="Medium">Medium</option>
+      <option value="High">High</option>
+      </select>
+      <label class="sr-only" for="task-due-date">Due date</label>
+      <input id="task-due-date" type="date" [(ngModel)]="dueDate" />
+      <button (click)="addTask()"><span aria-hidden="true">+</span> Add task</button>
+    </div>
+  </section>
+
+  @if (loading) {
+    <p>Loading...</p>
+  }
+
+  <div class="board-label"><span>Board view</span><span class="board-rule"></span><span class="board-hint">Drag-free, distraction-free</span></div>
+  <div class="board">
+    @for (col of columns; track col.status) {
+      <section class="column" [class.todo-column]="col.status === 'ToDo'" [class.progress-column]="col.status === 'InProgress'" [class.done-column]="col.status === 'Done'">
+        <div class="column-heading">
+          <div class="column-title"><span class="status-dot"></span><h2>{{ col.label }}</h2></div>
+          <span class="count">{{ tasksFor(col.status).length }}</span>
+        </div>
+
+        @for (task of tasksFor(col.status); track task.id) {
+          <article class="card" [class.overdue]="isOverdue(task)">
+            <div class="card-top">
+              <strong>{{ task.title }}</strong>
+              <span class="badge {{ task.priority }}">{{ task.priority }}</span>
+            </div>
+
+            @if (task.description) {
+              <p class="desc">{{ task.description }}</p>
+            }
+
+            @if (task.dueDate) {
+              <p class="due">Due {{ task.dueDate | date: 'mediumDate' }}
+                @if (isOverdue(task)) { <span> (overdue)</span> }
+              </p>
+            }
+
+            <div class="card-actions">
+              <select [ngModel]="task.status" (ngModelChange)="moveTask(task, $event)">
+                <option value="ToDo">To Do</option>
+                <option value="InProgress">In Progress</option>
+                <option value="Done">Done</option>
+              </select>
+              <button class="delete" (click)="deleteTask(task)" aria-label="Delete task"><span aria-hidden="true">&#215;</span> Delete</button>
+            </div>
+          </article>
+        } @empty {
+          <p class="empty">Nothing here</p>
+        }
+      </section>
+    }
+  </div>
 </div>
