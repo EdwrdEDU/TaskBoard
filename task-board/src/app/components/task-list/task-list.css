@@ -27,6 +27,10 @@ button { border: 0; border-radius: 9px; background: #d87555; color: #fff; cursor
 button:hover { background: #c76446; }
 .form button { min-height: 42px; padding: 0 17px; white-space: nowrap; }
 .error { margin: 14px 0 0; padding: 12px 15px; border: 1px solid #f0c1b3; border-radius: 9px; background: #fff1ed; color: #a3422e; font-size: .82rem; }
+.loading-state { display: grid; place-items: center; min-height: 190px; margin-top: 24px; }
+.loading-spinner { width: 42px; height: 42px; border: 4px solid #f2d8cb; border-top-color: #d87555; border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .loading-spinner { animation-duration: 1.6s; } }
 .board-label { align-items: center; gap: 12px; margin: 40px 0 14px; color: #46554f; font-size: .72rem; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
 .board-rule { height: 1px; flex: 1; background: rgba(29, 42, 39, .13); }
 .board-hint { color: #9aa39e; font-size: .67rem; font-weight: 600; text-transform: none; }

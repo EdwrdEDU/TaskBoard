@@ -39,7 +39,10 @@
   </section>
 
   @if (loading) {
-    <p>Loading...</p>
+    <div class="loading-state" role="status" aria-live="polite">
+      <span class="loading-spinner" aria-hidden="true"></span>
+      <span class="sr-only">Loading tasks...</span>
+    </div>
   }
 
   <div class="board-label"><span>Board view</span><span class="board-rule"></span><span class="board-hint">Drag-free, distraction-free</span></div>
